@@ -12,8 +12,8 @@ RUN mkdir /opt/src \
   && curl -L https://github.com/mpx/lua-cjson/archive/2.1.0.tar.gz 2> /dev/null > /opt/src/lua-cjson-2.1.0.tar.gz
 
 RUN cd /opt/src && tar xfz lua-cjson-2.1.0.tar.gz && cd lua-cjson-2.1.0 \
-  && sed -i.bak 's/LUA_INCLUDE_DIR =.*/LUA_INCLUDE_DIR = \/usr\/include\/luajit-2.0/g' Makefile \
-  && sed -i.bak 's/LUA_MODULE_DIR =.*/LUA_MODULE_DIR = \/usr\/share\/luajit-2.0.3\/jitg/g' Makefile \
+  && sed -i.bak 's/LUA_INCLUDE_DIR =.*/LUA_INCLUDE_DIR = \/usr\/include\/luajit-2.1/g' Makefile \
+  && sed -i.bak 's/LUA_MODULE_DIR =.*/LUA_MODULE_DIR = \/usr\/share\/luajit-2.1.0-beta3\/jitg/g' Makefile \
   && make && make install
 
 RUN cd /opt/src && tar xfz nginx-1.15.5.tar.gz && tar xfz ngx_devel_kit-0.3.0.tar.gz && tar xfz lua-nginx-module-0.10.13.tar.gz

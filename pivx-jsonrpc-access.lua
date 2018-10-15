@@ -51,21 +51,14 @@ if not success then
 end
 
 local method = body['method']
-local version = body['jsonrpc']
 
--- check we have a method and a version
-if empty(method) or empty(version) then
+-- check we have a method
+if empty(method) then
   ngx.log(ngx.ERR, 'no method and/or jsonrpc attribute')
   ngx.exit(ngx.HTTP_BAD_REQUEST)
   return
 end
 
--- check the version is supported
-if version ~= "2.0" then
-  ngx.log(ngx.ERR, 'jsonrpc version not supported: ' .. version)
-  ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
-  return
-end
 
 -- if whitelist is configured, check that the method is whitelisted
 if whitelist ~= nil then

@@ -40,11 +40,11 @@ You have to set one of `jsonrpc_whitelist` or `jsonrpc_blacklist` nginx variable
 location / {
   set $jsonrpc_whitelist 'decodemasternodebroadcast,relaymasternodebroadcast,sendrawtransaction';
   access_by_lua_file 'pivx-jsonrpc-access.lua';
-  proxy_pass http://localhost:8545;
+  proxy_pass http://localhost:51473;
 }
 ```
 
-With the configuration above, only `decodemasternodebroadcast`, `relaymasternodebroadcast`, `sendrawtransaction` calls will be fowarded to JSON-RPC interface at `http://localhost:8545`, other requests will be rejected with HTTP 403 status.
+With the configuration above, only `decodemasternodebroadcast`, `relaymasternodebroadcast`, `sendrawtransaction` calls will be fowarded to JSON-RPC interface at `http://localhost:51473`, other requests will be rejected with HTTP 403 status.
 
 You can find a full `nginx.conf` example file in the repo.
 
