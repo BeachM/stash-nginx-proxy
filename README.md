@@ -25,8 +25,6 @@ In order to have a fully functional nginx proxy, you have to install:
 * lua-nginx-module, see the setup [here](https://github.com/openresty/lua-nginx-module#installation).
 * cjson lua package installed, see [here](https://www.kyne.com.au/~mark/software/lua-cjson.php)
 
-Or you can use an adapt the provided Docker image (see [Docker image section](#docker-image)).
-
 
 Usage
 -----
@@ -48,16 +46,8 @@ With the configuration above, only `decodemasternodebroadcast`, `relaymasternode
 
 You can find a full `nginx.conf` example file in the repo.
 
-Docker image
-------------
 
-A ready to use image is published to Docker Hub.  
+Easy Setup
+----------
 
-Pull the image:  
-`docker pull random-zebra/PIVX-NGINX_proxy:latest`
-
-
-And run a container with your custom `nginx.conf`:  
-`docker run -p 8080:8080 -v /my/nginx.conf:/etc/nginx.conf random-zebra/PIVX-NGINX_proxy:latest`
-
-This image is based on Nginx 1.15.5, Lua Nginx module 0.10.13 and Lua CJSON 2.1.0.
+...
