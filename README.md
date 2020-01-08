@@ -1,15 +1,15 @@
 PIVX Nginx Proxy
 ====================
 
-This repo allows exposing a PIVX JSON-RPC server to remote hosts using nginx as a reverse proxy.
-For security purpose, a PIVX client exposes the JSON-RPC service only to localhost interface. In some cases, it can be interesting to expose JSON-RPC to remote hosts but with limited access.
+This repo allows exposing a Stash JSON-RPC server to remote hosts using nginx as a reverse proxy.
+For security purpose, a Stash client exposes the JSON-RPC service only to localhost interface. In some cases, it can be interesting to expose JSON-RPC to remote hosts but with limited access.
 
-This solution is to use a LUA script, used with nginx-lua-module to control access to the upstream pivx client. You can blacklist or whitelist certain JSON-RPC methods (for example, authorize only JSON-RPC requests to `sendrawtransaction` to allow remote hosts to send transactions to the client, without allowing them to read states in the chain).
+This solution is to use a LUA script, used with nginx-lua-module to control access to the upstream stash client. You can blacklist or whitelist certain JSON-RPC methods (for example, authorize only JSON-RPC requests to `sendrawtransaction` to allow remote hosts to send transactions to the client, without allowing them to read states in the chain).
 
 Why nginx?
 ----------
 
-nginx has some interesting characteristics as a reverse proxy on top of PIVX JSON-RPC service:
+nginx has some interesting characteristics as a reverse proxy on top of Stash JSON-RPC service:
 
 * Can expose the JSON-RPC service through a TLS channel
 * Can load balance between multiple JSON-RPC backends
@@ -19,10 +19,10 @@ nginx has some interesting characteristics as a reverse proxy on top of PIVX JSO
 How does it work
 ----------------
 
-The script `pivx-jsonrpc-access.lua` must be put in a `location` of your nginx, to be used from `access_by_lua_file` directive.
+The script `stash-jsonrpc-access.lua` must be put in a `location` of your nginx, to be used from `access_by_lua_file` directive.
 In order to have a fully functional nginx proxy, you need:
 
-* PIVX [core wallet](https://github.com/PIVX-Project/PIVX/releases)
+* Stash [core wallet](https://github.com/stashpayio/stash/releases)
 * [nginx](https://nginx.org/en/linux_packages.html#stable) equipped with:
   * lua-nginx-module, see the setup [here](https://github.com/openresty/lua-nginx-module#installation).
   * cjson lua package installed, see [here](https://www.kyne.com.au/~mark/software/lua-cjson.php)
@@ -33,12 +33,12 @@ You have to set one of `jsonrpc_whitelist` or `jsonrpc_blacklist` nginx variable
 ```
 location / {
   set $jsonrpc_whitelist 'decodemasternodebroadcast,relaymasternodebroadcast,sendrawtransaction';
-  access_by_lua_file 'pivx-jsonrpc-access.lua';
-  proxy_pass http://localhost:51473;
+  access_by_lua_file 'stash-jsonrpc-access.lua';
+  proxy_pass http://localhost:9998;
 }
 ```
 
-With the configuration above, only `decodemasternodebroadcast`, `relaymasternodebroadcast`, `sendrawtransaction` calls will be fowarded to JSON-RPC interface at `http://localhost:51473`, other requests will be rejected with HTTP 403 status.
+With the configuration above, only `decodemasternodebroadcast`, `relaymasternodebroadcast`, `sendrawtransaction` calls will be fowarded to JSON-RPC interface at `http://localhost:9998`, other requests will be rejected with HTTP 403 status.
 
 You can find a full `nginx.conf` example file in the repo.
 
@@ -51,7 +51,7 @@ The following guide is intended for Ubuntu 16.04 servers and can be easily adapt
 <br>
 
 #### Requirements
-Make sure to have a PIVX full node running with the following `pivx.conf` configuration (replace `myRpcUser` and `myRpcPass` with random credentials):
+Make sure to have a Stash full node running with the following `stash.conf` configuration (replace `myRpcUser` and `myRpcPass` with random credentials):
 ```
 txindex=1
 server=1
@@ -106,7 +106,7 @@ sudo apt-get update && sudo apt-get -y install certbot
 
 <a name="1"></a>1. Clone this repository
 ```
-git clone https://github.com/random-zebra/PIVX-NGINX_proxy.git
+git clone https://github.com/stashpayio/stash-nginx-proxy.git
 ```
 <br>
 
@@ -115,8 +115,8 @@ git clone https://github.com/random-zebra/PIVX-NGINX_proxy.git
 mkdir nginx-proxy && cd nginx-proxy && mkdir conf && mkdir logs
 ```
 ```
-cp ../PIVX-NGINX_proxy/nginx.conf conf/
-cp ../PIVX-NGINX_proxy/pivx-jsonrpc-access.lua conf/
+cp ../stash-nginx-proxy/nginx.conf conf/
+cp ../stash-nginx-proxy/stash-jsonrpc-access.lua conf/
 ```
 <br>
 
@@ -138,7 +138,7 @@ sudo htpasswd -c conf/.htpasswd myProxyUser
 ```
 <br>
 
-<a name="5"></a>5. Encode Base64 the rpc credentials that you set in your `pivx.conf`.<br>
+<a name="5"></a>5. Encode Base64 the rpc credentials that you set in your `stash.conf`.<br>
 Run this command (replacing `myRpcUser` and `myRpcPass`) and save the output string which will be copied inside `nginx.conf` file:
 ```
 echo -n "myRpcUser:myRpcPass" | base64
